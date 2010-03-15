@@ -141,6 +141,23 @@ class ConfigurationActionsInvocationTest < Test::Unit::TestCase
     @config.options[:password] = "g00b3r"
     @config.sudo_behavior_callback(nil)[ch, nil, "give it to me: "]
   end
+  
+  def test_sudo_behavior_callback_should_send_sudo_password_when_prompted_with_default_sudo_prompt
+    ch = mock("channel")
+    ch.expects(:send_data).with("g00b3r_sudo\n")
+    @config.options[:password] = "g00b3r"
+    @config.options[:sudo_password] = "g00b3r_sudo"
+    @config.sudo_behavior_callback(nil)[ch, nil, "sudo password: "]
+  end
+
+  def test_sudo_behavior_callback_should_send_sudo_password_when_prompted_with_custom_sudo_prompt
+    ch = mock("channel")
+    ch.expects(:send_data).with("g00b3r_sudo\n")
+    @config.set :sudo_prompt, "give it to me: "
+    @config.options[:password] = "g00b3r"
+    @config.options[:sudo_password] = "g00b3r_sudo"
+    @config.sudo_behavior_callback(nil)[ch, nil, "give it to me: "]
+  end
 
   def test_sudo_behavior_callback_with_incorrect_password_on_first_prompt
     ch = mock("channel")

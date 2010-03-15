@@ -234,7 +234,7 @@ module Capistrano
             end
 
             if out =~ /^#{Regexp.escape(sudo_prompt)}/
-              ch.send_data "#{self[:password]}\n"
+              ch.send_data "#{self[:sudo_password] || self[:password]}\n"
             elsif fallback
               fallback.call(ch, stream, out)
             end
